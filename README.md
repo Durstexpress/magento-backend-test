@@ -23,13 +23,10 @@ than 3-4 hours on the test it is not necessary to finish all of it. we want to e
 ```bash
 git clone git@github.com:Durstexpress/magento-backend-test.git
 ```
-##### 2. run  `bin/start` and `bin/setup` and update run magento provision commands if needed
+##### 2. run  `bin/setup` and update run magento provision commands if needed
 
 Prerequisites :This setup assumes you are running Docker 
 
 
 ##### 3. You are done. Now you can test service by url after setting up etc/hosts [https://magento2.test/](https://magento2.test/) 
-
- 
-
 
