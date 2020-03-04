@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="catalog">
+            <group id="price">
+                <field id="product_price_multiplier" translate="label comment" type="text" sortOrder="2"
+                       showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Product Price Multiplier</label>
+                    <comment><![CDATA[Whenever user add product to a cart multiply it’s price.]]></comment>
+                    <validate>required-entry validate-zero-or-greater validate-digits</validate>
+                    <config_path>dex/price_calculation/product_price_multiplier</config_path>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
