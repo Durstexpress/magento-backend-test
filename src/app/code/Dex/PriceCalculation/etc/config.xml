@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <dex>
+            <price_calculation>
+                <product_price_multiplier>1</product_price_multiplier>
+            </price_calculation>
+        </dex>
+    </default>
+</config>
