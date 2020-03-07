@@ -5,7 +5,6 @@ namespace Dex\PriceCalculation\Model\Quote\Item;
 use Dex\PriceCalculation\Model\Configuration;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Quote\Model\Quote\Item;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
@@ -23,18 +22,15 @@ class PriceCalculation
     private $storeManager;
 
     /**
-     * @var PriceCurrencyInterface
+     * @param ScopeConfigInterface $scopeConfig
+     * @param StoreManagerInterface $storeManager
      */
-    private $priceCurrency;
-
     public function __construct(
         ScopeConfigInterface $scopeConfig,
-        StoreManagerInterface $storeManager,
-        PriceCurrencyInterface $priceCurrency
+        StoreManagerInterface $storeManager
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->storeManager = $storeManager;
-        $this->priceCurrency = $priceCurrency;
     }
 
     /**
@@ -53,10 +49,7 @@ class PriceCalculation
         );
 
         $productPrice = $quoteItem->getProduct()->getPrice();
-        $newPrice = $this->priceCurrency->convert(
-            $productPrice * $priceMultiplier,
-            $quoteItem->getStore()
-        );
+        $newPrice = $productPrice * $priceMultiplier;
 
         $quoteItem->setCustomPrice($newPrice);
         $quoteItem->setOriginalCustomPrice($newPrice);
