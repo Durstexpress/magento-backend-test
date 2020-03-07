@@ -3,6 +3,6 @@
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
     <event name="sales_quote_add_item">
         <observer name="dexPriceCalculationProductPriceMultiplier"
-                  instance="Dex\PriceCalculation\Observer\ProductPriceMultiplier"/>
+                  instance="Dex\PriceCalculation\Observer\Quote\Item\ProductPriceMultiplier"/>
     </event>
 </config>

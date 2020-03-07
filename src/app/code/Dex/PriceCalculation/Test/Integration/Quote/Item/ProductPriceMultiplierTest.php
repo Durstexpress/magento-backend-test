@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Dex\PriceCalculation\Test\Integration;
+namespace Dex\PriceCalculation\Test\Integration\Quote\Item;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Quote\Model\Quote;

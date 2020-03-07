@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Dex\PriceCalculation\Observer;
+namespace Dex\PriceCalculation\Observer\Quote\Item;
 
 use Dex\PriceCalculation\Model\Quote\Item\PriceCalculation;
 use Magento\Framework\Event\Observer;
