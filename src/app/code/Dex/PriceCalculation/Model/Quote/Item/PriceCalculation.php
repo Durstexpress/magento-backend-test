@@ -3,34 +3,23 @@
 namespace Dex\PriceCalculation\Model\Quote\Item;
 
 use Dex\PriceCalculation\Model\Configuration;
-use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Model\Quote\Item;
-use Magento\Store\Model\ScopeInterface;
-use Magento\Store\Model\StoreManagerInterface;
 
 class PriceCalculation
 {
     /**
-     * @var ScopeConfigInterface
+     * @var Configuration
      */
-    private $scopeConfig;
+    private $configuration;
 
     /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
-
-    /**
-     * @param ScopeConfigInterface $scopeConfig
-     * @param StoreManagerInterface $storeManager
+     * @param Configuration $configuration
      */
     public function __construct(
-        ScopeConfigInterface $scopeConfig,
-        StoreManagerInterface $storeManager
+        Configuration $configuration
     ) {
-        $this->scopeConfig = $scopeConfig;
-        $this->storeManager = $storeManager;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -41,12 +30,7 @@ class PriceCalculation
      */
     public function multiplyPrice(Item $quoteItem): void
     {
-        $storeId = $this->storeManager->getStore()->getId();
-        $priceMultiplier = $this->scopeConfig->getValue(
-            Configuration::XML_PATH_PRODUCT_PRICE_MULTIPLIER,
-            ScopeInterface::SCOPE_STORE,
-            $storeId
-        );
+        $priceMultiplier = $this->configuration->getProductPriceMultiplier();
 
         $productPrice = $quoteItem->getProduct()->getPrice();
         $newPrice = $productPrice * $priceMultiplier;
