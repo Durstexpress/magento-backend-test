@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace Dex\PriceCalculation\Plugin\Model\Type;
+namespace Dex\PriceCalculation\Plugin\Checkout\Model\Type;
 
 use Dex\PriceCalculation\Model\Quote\Item\PriceCalculation;
 use Magento\Checkout\Model\Type\Onepage as OnepageOriginalModel;
