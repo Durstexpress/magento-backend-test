@@ -2,9 +2,9 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
-        <section id="catalog">
-            <group id="price">
-                <field id="product_price_multiplier" translate="label comment" type="text" sortOrder="2"
+        <section id="checkout">
+            <group id="options">
+                <field id="product_price_multiplier" translate="label comment" type="text" sortOrder="50"
                        showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Product Price Multiplier</label>
                     <comment><![CDATA[Whenever user add product to a cart multiply it’s price.]]></comment>
