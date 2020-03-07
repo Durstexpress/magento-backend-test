@@ -7,6 +7,7 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Quote\Model\Quote\Item;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
@@ -23,12 +24,19 @@ class ProductPriceMultiplier implements ObserverInterface
      */
     private $storeManager;
 
+    /**
+     * @var PriceCurrencyInterface
+     */
+    private $priceCurrency;
+
     public function __construct(
         ScopeConfigInterface $scopeConfig,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        PriceCurrencyInterface $priceCurrency
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->storeManager = $storeManager;
+        $this->priceCurrency = $priceCurrency;
     }
 
     /**
@@ -50,7 +58,10 @@ class ProductPriceMultiplier implements ObserverInterface
         $quoteItem = $observer->getEvent()->getQuoteItem();
 
         $productPrice = $quoteItem->getProduct()->getPrice();
-        $newPrice = $productPrice * $priceMultiplier;
+        $newPrice = $this->priceCurrency->convert(
+            $productPrice * $priceMultiplier,
+            $quoteItem->getStore()
+        );
 
         $quoteItem->setCustomPrice($newPrice);
         $quoteItem->setOriginalCustomPrice($newPrice);
