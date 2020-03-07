@@ -2,52 +2,48 @@
 
 namespace Dex\PriceCalculation\Plugin\Model\Type;
 
+use Dex\PriceCalculation\Model\Quote\Item\PriceCalculation;
+use Magento\Checkout\Model\Type\Onepage as OnepageOriginalModel;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Quote\Api\CartRepositoryInterface;
-use Magento\Quote\Model\Quote\Item\Option;
 use Magento\Quote\Model\Quote\Item\OptionFactory;
 
 class Onepage
 {
+    /**
+     * @var PriceCalculation
+     */
+    private $priceCalculation;
+
     /**
      * @var CartRepositoryInterface
      */
     private $cartRepository;
 
     /**
-     * @var OptionFactory
+     * @param PriceCalculation $priceCalculation
+     * @param CartRepositoryInterface $cartRepository
      */
-    private $optionFactory;
-
     public function __construct(
-        CartRepositoryInterface $cartRepository,
-        OptionFactory $optionFactory
+        PriceCalculation $priceCalculation,
+        CartRepositoryInterface $cartRepository
     ) {
+        $this->priceCalculation = $priceCalculation;
         $this->cartRepository = $cartRepository;
-        $this->optionFactory = $optionFactory;
     }
 
     /**
-     * Apply 50% discount to all quote items
+     * Apply 50% discount on all quote items
      *
-     * @param \Magento\Checkout\Model\Type\Onepage $subject
+     * @param OnepageOriginalModel $subject
      * @return array
+     * @throws LocalizedException
      */
-    public function beforeInitCheckout(\Magento\Checkout\Model\Type\Onepage $subject): array
+    public function beforeInitCheckout(OnepageOriginalModel $subject): array
     {
         $quote = $subject->getQuote();
         foreach ($quote->getItems() as $quoteItem) {
-            if (null !== $quoteItem->getOptionByCode('discount_applied')) {
-                continue;
-            }
-
-            $quoteItem->setOriginalCustomPrice($quoteItem->getOriginalCustomPrice() / 2);
-
-            /** @var Option $option */
-            $option = $this->optionFactory->create();
-            $option->setProduct($quoteItem->getProduct());
-            $option->setCode('discount_applied');
-
-            $quoteItem->addOption($option);
+            $this->priceCalculation->applyHalfPriceDiscount($quoteItem);
         }
 
         $quote->setTotalsCollectedFlag(false);
