@@ -2,41 +2,26 @@
 
 namespace Dex\PriceCalculation\Observer;
 
-use Dex\PriceCalculation\Model\Configuration;
-use Magento\Framework\App\Config\ScopeConfigInterface;
+use Dex\PriceCalculation\Model\Quote\Item\PriceCalculation;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Quote\Model\Quote\Item;
-use Magento\Store\Model\ScopeInterface;
-use Magento\Store\Model\StoreManagerInterface;
 
 class ProductPriceMultiplier implements ObserverInterface
 {
     /**
-     * @var ScopeConfigInterface
+     * @var PriceCalculation
      */
-    private $scopeConfig;
+    private $priceCalculation;
 
     /**
-     * @var StoreManagerInterface
+     * @param PriceCalculation $priceCalculation
      */
-    private $storeManager;
-
-    /**
-     * @var PriceCurrencyInterface
-     */
-    private $priceCurrency;
-
     public function __construct(
-        ScopeConfigInterface $scopeConfig,
-        StoreManagerInterface $storeManager,
-        PriceCurrencyInterface $priceCurrency
+        PriceCalculation $priceCalculation
     ) {
-        $this->scopeConfig = $scopeConfig;
-        $this->storeManager = $storeManager;
-        $this->priceCurrency = $priceCurrency;
+        $this->priceCalculation = $priceCalculation;
     }
 
     /**
@@ -47,23 +32,8 @@ class ProductPriceMultiplier implements ObserverInterface
      */
     public function execute(Observer $observer)
     {
-        $storeId = $this->storeManager->getStore()->getId();
-        $priceMultiplier = $this->scopeConfig->getValue(
-            Configuration::XML_PATH_PRODUCT_PRICE_MULTIPLIER,
-            ScopeInterface::SCOPE_STORE,
-            $storeId
-        );
-
         /** @var Item $quoteItem */
         $quoteItem = $observer->getEvent()->getQuoteItem();
-
-        $productPrice = $quoteItem->getProduct()->getPrice();
-        $newPrice = $this->priceCurrency->convert(
-            $productPrice * $priceMultiplier,
-            $quoteItem->getStore()
-        );
-
-        $quoteItem->setCustomPrice($newPrice);
-        $quoteItem->setOriginalCustomPrice($newPrice);
+        $this->priceCalculation->multiplyPrice($quoteItem);
     }
 }
