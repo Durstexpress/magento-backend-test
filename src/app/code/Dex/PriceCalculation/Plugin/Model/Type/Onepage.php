@@ -2,11 +2,6 @@
 
 namespace Dex\PriceCalculation\Plugin\Model\Type;
 
-use Magento\Framework\Exception\CouldNotSaveException;
-use Magento\Framework\Exception\InputException;
-use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Pricing\PriceCurrencyInterface;
-use Magento\Quote\Api\CartItemRepositoryInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Model\Quote\Item\Option;
 use Magento\Quote\Model\Quote\Item\OptionFactory;
@@ -19,29 +14,15 @@ class Onepage
     private $cartRepository;
 
     /**
-     * @var PriceCurrencyInterface
-     */
-    private $priceCurrency;
-
-    /**
-     * @var CartItemRepositoryInterface
-     */
-    private $cartItemRepository;
-
-    /**
      * @var OptionFactory
      */
     private $optionFactory;
 
     public function __construct(
         CartRepositoryInterface $cartRepository,
-        CartItemRepositoryInterface $cartItemRepository,
-        PriceCurrencyInterface $priceCurrency,
         OptionFactory $optionFactory
     ) {
         $this->cartRepository = $cartRepository;
-        $this->cartItemRepository = $cartItemRepository;
-        $this->priceCurrency = $priceCurrency;
         $this->optionFactory = $optionFactory;
     }
 
@@ -59,13 +40,7 @@ class Onepage
                 continue;
             }
 
-            $discountAmount = $quoteItem->getOriginalCustomPrice() / 2;
-            $newPrice = $this->priceCurrency->convert(
-                $quoteItem->getOriginalCustomPrice() - $discountAmount,
-                $quote->getStore()
-            );
-
-            $quoteItem->setOriginalCustomPrice($newPrice);
+            $quoteItem->setOriginalCustomPrice($quoteItem->getOriginalCustomPrice() / 2);
 
             /** @var Option $option */
             $option = $this->optionFactory->create();
